@@ -110,7 +110,6 @@ public class LoginServlet extends HttpServlet {
                     Cookie cookie = new Cookie("token", token_dao.getToken().getToken());
                     long valid_time = new Timestamp(new Date().getTime()).getTime() - (long) token_dao.getToken().getExpiredAt().getTime();
                     valid_time/=1000;
-                    System.out.println(valid_time);
                     cookie.setMaxAge((int) valid_time);
                     response.addCookie(cookie);
                     

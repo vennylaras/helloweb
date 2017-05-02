@@ -13,7 +13,8 @@
 *.class
 
 # NetBeans specific
-nbproject/private/
+HelloClient/nbproject/private/
+HelloWeb/nbproject/private/
 build/
 nbbuild/
 dist/
