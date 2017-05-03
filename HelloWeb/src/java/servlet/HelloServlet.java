@@ -53,7 +53,7 @@ public class HelloServlet extends HttpServlet {
         if (found) {
             Token token = token_dao.find(tokenkey);
             User user = user_dao.find(token.getUserId());
-            request.setAttribute("fullname", user.getFirstName() + " " + user.getLastName());
+            request.setAttribute("fullname", user.getFirstName() + " " + user.getLastName() + "!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("hello.jsp");
             dispatcher.forward(request,response);
         } else {

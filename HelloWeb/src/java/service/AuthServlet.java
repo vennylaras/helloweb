@@ -109,7 +109,7 @@ public class AuthServlet extends HttpServlet {
                     jo.put("message", "Incorrect password!");
                 } else {
                     jo.put("status", 200);
-                    jo.put("message", "Hello " + user.getFirstName() + " " + user.getLastName());
+                    jo.put("message", "Hello " + user.getFirstName() + " " + user.getLastName() + "!");
                 }
             }
             out.println(jo.toString());
