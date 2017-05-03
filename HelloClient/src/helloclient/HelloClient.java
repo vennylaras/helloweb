@@ -5,6 +5,23 @@
  */
 package helloclient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 /**
  *
  * @author Venny
@@ -33,9 +50,9 @@ public class HelloClient extends javax.swing.JFrame {
         loginPanel = new javax.swing.JPanel();
         usernameField = new javax.swing.JTextField();
         usernameLabel = new javax.swing.JLabel();
-        passwordField = new javax.swing.JTextField();
         passwordLabel = new javax.swing.JLabel();
         loginButton = new javax.swing.JButton();
+        passwordField = new javax.swing.JPasswordField();
         helloPanel = new javax.swing.JPanel();
         helloLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
@@ -69,8 +86,8 @@ public class HelloClient extends javax.swing.JFrame {
                             .addComponent(passwordLabel, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(18, 18, 18)
                         .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(passwordField)
-                            .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(usernameField)
+                            .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
         loginPanelLayout.setVerticalGroup(
@@ -82,8 +99,8 @@ public class HelloClient extends javax.swing.JFrame {
                     .addComponent(usernameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(passwordLabel))
+                    .addComponent(passwordLabel)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(25, 25, 25)
                 .addComponent(loginButton)
                 .addContainerGap(29, Short.MAX_VALUE))
@@ -146,14 +163,57 @@ public class HelloClient extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        // TODO add your handling code here:
+        String username = this.usernameField.getText();
+        String password = new String(this.passwordField.getPassword());
+        String message = "";
+        
+        // call service
+        try {
+            URL url = new URL("http://localhost:8080/HelloWeb/api/auth");
+            Map<String,Object> params = new LinkedHashMap<>();
+            params.put("username", username);
+            params.put("password", password);
+
+            StringBuilder postData = new StringBuilder();
+            for (Map.Entry<String,Object> param : params.entrySet()) {
+                if (postData.length() != 0) postData.append('&');
+                postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                postData.append('=');
+                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+            }
+            byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+            conn.setDoOutput(true);
+            conn.getOutputStream().write(postDataBytes);
+
+            Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            String result = "";
+            for (int c; (c = in.read()) >= 0;) {
+                result += (char) c;
+            }
+            JSONObject jo = (JSONObject)new JSONParser().parse(result);
+            message = jo.get("message").toString();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(HelloClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(HelloClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(HelloClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(HelloClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.helloLabel.setText(message);
         this.setContentPane(helloPanel);
         this.invalidate();
         this.validate();
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        // TODO add your handling code here:
         this.setContentPane(loginPanel);
         this.invalidate();
         this.validate();
@@ -200,7 +260,7 @@ public class HelloClient extends javax.swing.JFrame {
     private javax.swing.JButton loginButton;
     private javax.swing.JPanel loginPanel;
     private javax.swing.JButton okButton;
-    private javax.swing.JTextField passwordField;
+    private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JTextField usernameField;
     private javax.swing.JLabel usernameLabel;
