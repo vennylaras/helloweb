@@ -32,7 +32,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-6 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">Log in</div>
                     <div class="panel-body">
@@ -57,6 +57,17 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Java Web Start</div>
+                    <div class="panel-body">
+                        <script src="http://java.com/js/deployJava.js"></script>
+                        <script>
+                            deployJava.createWebStartLaunchButton("launch.jnlp");
+                        </script>
                     </div>
                 </div>
             </div>

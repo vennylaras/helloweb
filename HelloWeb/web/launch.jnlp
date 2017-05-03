@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jnlp codebase="file:/C:/Users/Venny/Documents/NetBeansProjects/helloweb/HelloClient/dist/" href="launch.jnlp" spec="1.0+">
+    <information>
+        <title>HelloClient</title>
+        <vendor>Venny</vendor>
+        <homepage href=""/>
+        <description>HelloClient</description>
+        <description kind="short">HelloClient</description>
+    </information>
+    <update check="always"/>
+    <resources>
+        <j2se version="1.8+"/>
+        <jar href="HelloClient.jar" main="true"/>
+    <jar href="lib/json-simple.jar"/>
+</resources>
+    <application-desc main-class="helloclient.HelloClient">
+    </application-desc>
+</jnlp>
