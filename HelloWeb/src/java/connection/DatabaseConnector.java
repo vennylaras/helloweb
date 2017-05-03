@@ -20,7 +20,7 @@ public class DatabaseConnector {
     
     // Database credentials
     private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "pradipta";
+    private static final String PASSWORD = "";
     
     public static Connection connect() {
         Connection conn = null;
